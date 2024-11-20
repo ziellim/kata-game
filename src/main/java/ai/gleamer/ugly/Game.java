@@ -4,26 +4,24 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static ai.gleamer.ugly.QuestionCategory.*;
+
 public class Game {
 
     private static final String ANSWER_WAS_CORRECT = "Answer was correct!!!!";
-    private static final int NUMBER_OF_PLAYER = 6;
+    private static final int MAXIMUM_NUMBER_OF_PLAYER = 6;
     private final List<Player> players;
     private int playerCursor;
-    private final List<String> popQuestions, scienceQuestions, sportsQuestions, rockQuestions;
-    private boolean isGettingOutOfPenaltyBox;
+    private final List<Question> questions;
 
     public  Game(){
-        players = new ArrayList<>(NUMBER_OF_PLAYER);
-        popQuestions = new LinkedList<>();
-        scienceQuestions = new LinkedList<>();
-        sportsQuestions = new LinkedList<>();
-        rockQuestions = new LinkedList<>();
+        players = new ArrayList<>(MAXIMUM_NUMBER_OF_PLAYER);
+        questions = new LinkedList<>();
         for (int i = 0; i < 50; i++) {
-            popQuestions.addLast("Pop Question " + i);
-            scienceQuestions.addLast("Science Question " + i);
-            sportsQuestions.addLast("Sports Question " + i);
-            rockQuestions.addLast("Rock Question " + i);
+            questions.addLast(new Question("Pop Question " + i, POP));
+            questions.addLast(new Question("Science Question " + i, SCIENCE));
+            questions.addLast(new Question("Sports Question " + i, SPORT));
+            questions.addLast(new Question("Rock Question " + i, ROCK));
         }
     }
 
@@ -48,29 +46,25 @@ public class Game {
         if (currentPlayer.isInPenaltyBox()) {
             if (roll % 2 == 0) {
                 System.out.println(currentPlayer.getName() + " is not getting out of the penalty box");
-                isGettingOutOfPenaltyBox = false;
                 return;
             }
-            isGettingOutOfPenaltyBox = true;
+            currentPlayer.setInPenaltyBox(false);
             System.out.println(currentPlayer.getName() + " is getting out of the penalty box");
         }
         moveCurrentPlayer(roll);
-        displayCurrentCategory();
-        askQuestion();
+        var question = questions.remove(getCurrentPlayer().getRandomQuestionCursor());
+        System.out.println("The category is " + question.getCategory().getValue());
+        System.out.println(question.getValue());
     }
 
-    public boolean registerCorrectAnswer() {
+    public void registerCorrectAnswer() {
         var currentPlayer = getCurrentPlayer();
-        if (currentPlayer.isInPenaltyBox() && !isGettingOutOfPenaltyBox) {
-            switchToNextPlayer();
-            return true;
-        } else {
+        if (!currentPlayer.isInPenaltyBox()) {
             System.out.println(ANSWER_WAS_CORRECT);
             currentPlayer.incrementCoins();
             displayCoinsNumber();
-            switchToNextPlayer();
-            return didPlayerWin();
         }
+        switchToNextPlayer();
     }
 
     public void registerWrongAnswer(){
@@ -88,34 +82,17 @@ public class Game {
         return players.get(index);
     }
 
-    public boolean isGettingOutOfPenaltyBox() {
-        return isGettingOutOfPenaltyBox;
-    }
-
-    public void setGettingOutOfPenaltyBox(boolean gettingOutOfPenaltyBox) {
-        isGettingOutOfPenaltyBox = gettingOutOfPenaltyBox;
-    }
-
     public int getPlayerCursor() {
         return playerCursor;
     }
 
-    public List<String> getScienceQuestions() {
-        return scienceQuestions;
+    // only for test
+    public long countScienceQuestions() {
+        return questions.stream().filter(question -> SCIENCE == question.getCategory()).count();
     }
 
     private boolean didPlayerWin() {
-        return getCurrentPlayer().getCoins() != NUMBER_OF_PLAYER;
-    }
-
-    private void askQuestion() {
-        var question = switch (getCurrentPlayer().getQuestionCategory()){
-            case POP -> popQuestions.removeFirst();
-            case SCIENCE -> scienceQuestions.removeFirst();
-            case SPORT -> sportsQuestions.removeFirst();
-            case ROCK -> rockQuestions.removeFirst();
-        };
-        System.out.println(question);
+        return getCurrentPlayer().getCoins() != MAXIMUM_NUMBER_OF_PLAYER;
     }
 
     private void switchToNextPlayer(){
@@ -130,14 +107,9 @@ public class Game {
         System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getCoins() + " Gold Coins.");
     }
 
-    private void displayCurrentCategory() {
-        System.out.println("The category is " + getCurrentPlayer().getQuestionCategory().getValue());
-    }
-
     private void moveCurrentPlayer(int roll) {
         var currentPlayer = getCurrentPlayer();
-        currentPlayer.setQuestionCategory(roll);
-        System.out.println(currentPlayer.getName() + "'s new location is " + currentPlayer.getQuestionCategory());
+        currentPlayer.setRandomQuestionCursor(roll);
+        System.out.println(currentPlayer.getName() + "'s new location is " + currentPlayer.getRandomQuestionCursor());
     }
 }
-

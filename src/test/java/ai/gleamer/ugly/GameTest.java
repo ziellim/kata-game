@@ -20,8 +20,8 @@ class GameTest {
             game.roll(7);
             // then
             assertThat(game.getPlayerCursor()).isEqualTo(0);
-            assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(ROCK);
-            assertThat(game.isGettingOutOfPenaltyBox()).isFalse();
+            assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(7);
+            assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
         }
 
         @Test
@@ -34,9 +34,9 @@ class GameTest {
             // when
             game.roll(5);
             // then
-            assertThat(game.isGettingOutOfPenaltyBox()).isEqualTo(true);
-            assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(SCIENCE);
-            assertThat(game.getScienceQuestions()).hasSize(49);
+            assertThat(game.getPlayer(0).isInPenaltyBox()).isEqualTo(false);
+            assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(5);
+            assertThat(game.countScienceQuestions()).isEqualTo(49);
         }
 
         @Test
@@ -49,8 +49,8 @@ class GameTest {
             // when
             game.roll(4);
             // then
-            assertThat(game.isGettingOutOfPenaltyBox()).isEqualTo(false);
-            assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(POP);
+            assertThat(game.getPlayer(0).isInPenaltyBox()).isEqualTo(true);
+            assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(0);
         }
     }
 
@@ -64,11 +64,10 @@ class GameTest {
             game.addNewPlayer("Player 1");
             game.addNewPlayer("Player 2");
             // when
-            var result = game.registerCorrectAnswer();
+            game.registerCorrectAnswer();
             // then
             assertThat(game.getPlayer(0).getCoins()).isEqualTo(1);
             assertThat(game.getPlayerCursor()).isEqualTo(1);
-            assertThat(result).isTrue();
         }
 
         @Test
@@ -78,13 +77,12 @@ class GameTest {
             game.addNewPlayer("Player 1");
             game.addNewPlayer("Player 2");
             game.getPlayer(0).setInPenaltyBox(true);
-            game.setGettingOutOfPenaltyBox(true);
             // when
-            var result = game.registerCorrectAnswer();
+            game.registerCorrectAnswer();
             // then
-            assertThat(game.getPlayer(0).getCoins()).isEqualTo(1);
+            assertThat(game.getPlayer(0).getCoins()).isEqualTo(0);
             assertThat(game.getPlayerCursor()).isEqualTo(1);
-            assertThat(result).isTrue();
+
         }
 
         @Test
@@ -94,13 +92,11 @@ class GameTest {
             game.addNewPlayer("Player 1");
             game.addNewPlayer("Player 2");
             game.getPlayer(0).setInPenaltyBox(true);
-            game.setGettingOutOfPenaltyBox(false);
             // when
-            var result = game.registerCorrectAnswer();
+            game.registerCorrectAnswer();
             // then
             assertThat(game.getPlayer(0).getCoins()).isEqualTo(0);
             assertThat(game.getPlayerCursor()).isEqualTo(1);
-            assertThat(result).isTrue();
         }
     }
 

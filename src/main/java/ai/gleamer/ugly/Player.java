@@ -1,12 +1,9 @@
 package ai.gleamer.ugly;
 
-import static ai.gleamer.ugly.QuestionCategory.*;
-import static ai.gleamer.ugly.QuestionCategory.ROCK;
-
 public class Player {
     private String name;
 
-    private int questionCategory;
+    private int randomQuestionCursor;
 
     private int coins;
 
@@ -20,19 +17,14 @@ public class Player {
         return name;
     }
 
-    public QuestionCategory getQuestionCategory() {
-        return switch (questionCategory) {
-            case 0,4,8 -> POP;
-            case 1,5,9 -> SCIENCE;
-            case 2,6,10 -> SPORT;
-            default -> ROCK;
-        };
+    public int getRandomQuestionCursor() {
+        return randomQuestionCursor;
     }
 
-    public void setQuestionCategory(int roll) {
-        questionCategory = questionCategory + roll;
-        if (questionCategory > 11) {
-            questionCategory = questionCategory - 12;
+    public void setRandomQuestionCursor(int roll) {
+        randomQuestionCursor = randomQuestionCursor + roll;
+        if (randomQuestionCursor > 11) {
+            randomQuestionCursor = randomQuestionCursor - 12;
         }
     }
 

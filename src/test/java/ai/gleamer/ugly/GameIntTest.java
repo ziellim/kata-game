@@ -12,98 +12,103 @@ public class GameIntTest {
         var game = new Game();
         assertThat(game.isPlayable()).isFalse();
 
-        game.addNewPlayer("Livai");
+        game.addNewPlayer("Player 1");
         assertThat(game.isPlayable()).isFalse();
 
-        game.addNewPlayer("Eren");
+        game.addNewPlayer("Player 2");
         assertThat(game.isPlayable()).isTrue();
 
-        // Livai
+        // Player 1
         assertThat(game.getPlayerCursor()).isZero();
         game.roll(7);
-        assertThat(game.isGettingOutOfPenaltyBox()).isFalse();
-        var result = game.registerCorrectAnswer();
-        assertThat(result).isTrue();
-        assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(ROCK);
-        assertThat(game.getPlayer(1).getQuestionCategory()).isEqualTo(POP);
+        assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
+        game.registerCorrectAnswer();
+        assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(7);
+        assertThat(game.getPlayer(1).getRandomQuestionCursor()).isEqualTo(0);
         assertThat(game.getPlayer(0).getCoins()).isEqualTo(1);
         assertThat(game.getPlayer(1).getCoins()).isEqualTo(0);
         assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
         assertThat(game.getPlayer(1).isInPenaltyBox()).isFalse();
 
-        // Eren
+        // Player 2
         assertThat(game.getPlayerCursor()).isOne();
         game.roll(4);
+        assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
         game.registerWrongAnswer();
-        assertThat(game.isGettingOutOfPenaltyBox()).isFalse();
-        assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(ROCK);
-        assertThat(game.getPlayer(1).getQuestionCategory()).isEqualTo(POP);
+        assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(7);
+        assertThat(game.getPlayer(1).getRandomQuestionCursor()).isEqualTo(4);
         assertThat(game.getPlayer(0).getCoins()).isEqualTo(1);
         assertThat(game.getPlayer(1).getCoins()).isEqualTo(0);
         assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
         assertThat(game.getPlayer(1).isInPenaltyBox()).isTrue();
 
-        // Livai
+        // Player 1
         assertThat(game.getPlayerCursor()).isZero();
         game.roll(8);
-        result = game.registerCorrectAnswer();
-        assertThat(result).isTrue();
-        assertThat(game.isGettingOutOfPenaltyBox()).isFalse();
-        assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(ROCK);
-        assertThat(game.getPlayer(1).getQuestionCategory()).isEqualTo(POP);
+        assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
+        game.registerCorrectAnswer();
+        assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
+        assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(3);
+        assertThat(game.getPlayer(1).getRandomQuestionCursor()).isEqualTo(4);
         assertThat(game.getPlayer(0).getCoins()).isEqualTo(2);
         assertThat(game.getPlayer(1).getCoins()).isEqualTo(0);
         assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
         assertThat(game.getPlayer(1).isInPenaltyBox()).isTrue();
 
-        // Eren
+        // Player 2
         assertThat(game.getPlayerCursor()).isOne();
         game.roll(6);
-        assertThat(game.isGettingOutOfPenaltyBox()).isFalse();
-        assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(ROCK);
-        assertThat(game.getPlayer(1).getQuestionCategory()).isEqualTo(POP);
+        assertThat(game.getPlayer(1).isInPenaltyBox()).isTrue();
+        assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(3);
+        assertThat(game.getPlayer(1).getRandomQuestionCursor()).isEqualTo(4);
         assertThat(game.getPlayer(0).getCoins()).isEqualTo(2);
         assertThat(game.getPlayer(1).getCoins()).isEqualTo(0);
         assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
         assertThat(game.getPlayer(1).isInPenaltyBox()).isTrue();
 
-        // Eren
+        // Player 2
         assertThat(game.getPlayerCursor()).isOne();
         game.roll(2);
-        game.registerWrongAnswer();
-        assertThat(result).isTrue();
-        assertThat(game.isGettingOutOfPenaltyBox()).isFalse();
-        assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(ROCK);
-        assertThat(game.getPlayer(1).getQuestionCategory()).isEqualTo(POP);
+        assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
+        assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(3);
+        assertThat(game.getPlayer(1).getRandomQuestionCursor()).isEqualTo(4);
         assertThat(game.getPlayer(0).getCoins()).isEqualTo(2);
         assertThat(game.getPlayer(1).getCoins()).isEqualTo(0);
         assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
         assertThat(game.getPlayer(1).isInPenaltyBox()).isTrue();
 
-        // Livai
+        // Player 2
+        assertThat(game.getPlayerCursor()).isOne();
+        game.roll(1);
+        game.registerCorrectAnswer();
+        assertThat(game.getPlayer(1).isInPenaltyBox()).isFalse();
+        assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(3);
+        assertThat(game.getPlayer(1).getRandomQuestionCursor()).isEqualTo(5);
+        assertThat(game.getPlayer(0).getCoins()).isEqualTo(2);
+        assertThat(game.getPlayer(1).getCoins()).isEqualTo(1);
+        assertThat(game.getPlayer(0).isInPenaltyBox()).isFalse();
+
+        // Player 1
         assertThat(game.getPlayerCursor()).isZero();
         game.roll(6);
         game.registerWrongAnswer();
-        assertThat(result).isTrue();
-        assertThat(game.isGettingOutOfPenaltyBox()).isFalse();
-        assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(SCIENCE);
-        assertThat(game.getPlayer(1).getQuestionCategory()).isEqualTo(POP);
-        assertThat(game.getPlayer(0).getCoins()).isEqualTo(2);
-        assertThat(game.getPlayer(1).getCoins()).isEqualTo(0);
         assertThat(game.getPlayer(0).isInPenaltyBox()).isTrue();
-        assertThat(game.getPlayer(1).isInPenaltyBox()).isTrue();
-
-        // Eren
-        assertThat(game.getPlayerCursor()).isOne();
-        game.roll(1);
-        result = game.registerCorrectAnswer();
-        assertThat(result).isTrue();
-        assertThat(game.isGettingOutOfPenaltyBox()).isTrue();
-        assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(SCIENCE);
-        assertThat(game.getPlayer(1).getQuestionCategory()).isEqualTo(SCIENCE);
+        assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(9);
+        assertThat(game.getPlayer(1).getRandomQuestionCursor()).isEqualTo(5);
         assertThat(game.getPlayer(0).getCoins()).isEqualTo(2);
         assertThat(game.getPlayer(1).getCoins()).isEqualTo(1);
         assertThat(game.getPlayer(0).isInPenaltyBox()).isTrue();
-        assertThat(game.getPlayer(1).isInPenaltyBox()).isTrue();
+
+        // Player 2
+        assertThat(game.getPlayerCursor()).isOne();
+        game.roll(1);
+        game.registerCorrectAnswer();
+        assertThat(game.getPlayer(1).isInPenaltyBox()).isFalse();
+        assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(9);
+        assertThat(game.getPlayer(1).getRandomQuestionCursor()).isEqualTo(6);
+        assertThat(game.getPlayer(0).getCoins()).isEqualTo(2);
+        assertThat(game.getPlayer(1).getCoins()).isEqualTo(2);
+        assertThat(game.getPlayer(0).isInPenaltyBox()).isTrue();
+        assertThat(game.getPlayer(1).isInPenaltyBox()).isFalse();
     }
 }
