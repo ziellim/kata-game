@@ -3,6 +3,7 @@ package ai.gleamer.ugly;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static ai.gleamer.ugly.QuestionCategory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GameTest {
@@ -16,10 +17,10 @@ class GameTest {
             game.addNewPlayer("Player 1");
             game.addNewPlayer("Player 2");
             // when
-            game.roll(5);
+            game.roll(7);
             // then
-            assertThat(game.getCurrentPlayer()).isEqualTo(0);
-            assertThat(game.getPlaces()[0]).isEqualTo(5);
+            assertThat(game.getPlayerCursor()).isEqualTo(0);
+            assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(ROCK);
             assertThat(game.isGettingOutOfPenaltyBox()).isFalse();
         }
 
@@ -29,12 +30,12 @@ class GameTest {
             var game = new Game();
             game.addNewPlayer("Player 1");
             game.addNewPlayer("Player 2");
-            game.getInPenaltyBox()[0] = true;
+            game.getPlayer(0).setInPenaltyBox(true);
             // when
             game.roll(5);
             // then
             assertThat(game.isGettingOutOfPenaltyBox()).isEqualTo(true);
-            assertThat(game.getPlaces()[0]).isEqualTo(5);
+            assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(SCIENCE);
             assertThat(game.getScienceQuestions()).hasSize(49);
         }
 
@@ -44,14 +45,13 @@ class GameTest {
             var game = new Game();
             game.addNewPlayer("Player 1");
             game.addNewPlayer("Player 2");
-            game.getInPenaltyBox()[0] = true;
+            game.getPlayer(0).setInPenaltyBox(true);
             // when
             game.roll(4);
             // then
             assertThat(game.isGettingOutOfPenaltyBox()).isEqualTo(false);
-            assertThat(game.getPlaces()[0]).isEqualTo(0);
+            assertThat(game.getPlayer(0).getQuestionCategory()).isEqualTo(POP);
         }
-
     }
 
     @Nested
@@ -66,8 +66,8 @@ class GameTest {
             // when
             var result = game.registerCorrectAnswer();
             // then
-            assertThat(game.getPurses()[0]).isEqualTo(1);
-            assertThat(game.getCurrentPlayer()).isEqualTo(1);
+            assertThat(game.getPlayer(0).getCoins()).isEqualTo(1);
+            assertThat(game.getPlayerCursor()).isEqualTo(1);
             assertThat(result).isTrue();
         }
 
@@ -77,13 +77,13 @@ class GameTest {
             var game = new Game();
             game.addNewPlayer("Player 1");
             game.addNewPlayer("Player 2");
-            game.getInPenaltyBox()[0] = true;
+            game.getPlayer(0).setInPenaltyBox(true);
             game.setGettingOutOfPenaltyBox(true);
             // when
             var result = game.registerCorrectAnswer();
             // then
-            assertThat(game.getPurses()[0]).isEqualTo(1);
-            assertThat(game.getCurrentPlayer()).isEqualTo(1);
+            assertThat(game.getPlayer(0).getCoins()).isEqualTo(1);
+            assertThat(game.getPlayerCursor()).isEqualTo(1);
             assertThat(result).isTrue();
         }
 
@@ -93,13 +93,13 @@ class GameTest {
             var game = new Game();
             game.addNewPlayer("Player 1");
             game.addNewPlayer("Player 2");
-            game.getInPenaltyBox()[0] = true;
+            game.getPlayer(0).setInPenaltyBox(true);
             game.setGettingOutOfPenaltyBox(false);
             // when
             var result = game.registerCorrectAnswer();
             // then
-            assertThat(game.getPurses()[0]).isEqualTo(0);
-            assertThat(game.getCurrentPlayer()).isEqualTo(1);
+            assertThat(game.getPlayer(0).getCoins()).isEqualTo(0);
+            assertThat(game.getPlayerCursor()).isEqualTo(1);
             assertThat(result).isTrue();
         }
     }
@@ -116,8 +116,8 @@ class GameTest {
             // when
             game.registerWrongAnswer();
             // then
-            assertThat(game.getInPenaltyBox()[0]).isTrue();
-            assertThat(game.getCurrentPlayer()).isEqualTo(1);
+            assertThat(game.getPlayer(0).isInPenaltyBox()).isTrue();
+            assertThat(game.getPlayerCursor()).isEqualTo(1);
         }
     }
 
