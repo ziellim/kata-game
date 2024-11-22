@@ -12,17 +12,11 @@ public class Game {
     private static final int MAXIMUM_NUMBER_OF_PLAYER = 6;
     private final List<Player> players;
     private int playerCursor;
-    private final List<Question> questions;
+    private final QuestionInventory questions;
 
     public  Game(){
         players = new ArrayList<>(MAXIMUM_NUMBER_OF_PLAYER);
-        questions = new LinkedList<>();
-        for (int i = 0; i < 50; i++) {
-            questions.addLast(new Question("Pop Question " + i, POP));
-            questions.addLast(new Question("Science Question " + i, SCIENCE));
-            questions.addLast(new Question("Sports Question " + i, SPORT));
-            questions.addLast(new Question("Rock Question " + i, ROCK));
-        }
+        questions = new QuestionInventory();
     }
 
     public boolean isPlayable() {
@@ -52,7 +46,7 @@ public class Game {
             System.out.println(currentPlayer.getName() + " is getting out of the penalty box");
         }
         moveCurrentPlayer(roll);
-        var question = questions.remove(getCurrentPlayer().getRandomQuestionCursor());
+        var question = questions.get(getCurrentPlayer().getRandomQuestionCursor());
         System.out.println("The category is " + question.getCategory().getValue());
         System.out.println(question.getValue());
     }
@@ -86,9 +80,8 @@ public class Game {
         return playerCursor;
     }
 
-    // only for test
-    public long countScienceQuestions() {
-        return questions.stream().filter(question -> SCIENCE == question.getCategory()).count();
+    public QuestionInventory getQuestions() {
+        return questions;
     }
 
     private boolean didPlayerWin() {

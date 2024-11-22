@@ -36,7 +36,7 @@ class GameTest {
             // then
             assertThat(game.getPlayer(0).isInPenaltyBox()).isEqualTo(false);
             assertThat(game.getPlayer(0).getRandomQuestionCursor()).isEqualTo(5);
-            assertThat(game.countScienceQuestions()).isEqualTo(49);
+            assertThat(game.getQuestions().countQuestions(SCIENCE)).isEqualTo(49);
         }
 
         @Test
